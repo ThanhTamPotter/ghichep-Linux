@@ -1,0 +1,1 @@
+# Thư mục ghi chép một số lưu ý về các lệnh trong linux
