@@ -137,6 +137,59 @@ Linux 4.4.0-116-generic (client1)       04/05/2018      _x86_64_        (4 CPU)
 Average:        all      0.00      0.00      0.12      0.00      0.00     99.88
 ```
 
+## 6. Hiển thị thông số về ổ cứng
+
+`sar` cung cấp các thông số về ổ cứng (block devices) với tùy chọn `-d`. 
+
+```
+root@client1:~# sar -d 2 3
+Linux 4.4.0-116-generic (client1)       04/21/2018      _x86_64_        (4 CPU)
+
+02:35:11 PM       DEV       tps  rd_sec/s  wr_sec/s  avgrq-sz  avgqu-sz     await     svctm     %util
+02:35:13 PM  dev253-0      1.50      0.00    428.00    285.33      0.26    174.67    174.67     26.20
+02:35:13 PM  dev252-0     53.50      0.00    428.00      8.00      0.26      4.90      4.90     26.20
+02:35:13 PM  dev252-1      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+02:35:13 PM       DEV       tps  rd_sec/s  wr_sec/s  avgrq-sz  avgqu-sz     await     svctm     %util
+02:35:15 PM  dev253-0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+02:35:15 PM  dev252-0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+02:35:15 PM  dev252-1      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+02:35:15 PM       DEV       tps  rd_sec/s  wr_sec/s  avgrq-sz  avgqu-sz     await     svctm     %util
+02:35:17 PM  dev253-0      7.00      0.00     56.00      8.00      0.00      0.00      0.00      0.00
+02:35:17 PM  dev252-0      7.00      0.00     56.00      8.00      0.00      0.00      0.00      0.00
+02:35:17 PM  dev252-1      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+
+Average:          DEV       tps  rd_sec/s  wr_sec/s  avgrq-sz  avgqu-sz     await     svctm     %util
+Average:     dev253-0      2.83      0.00    161.33     56.94      0.09     30.82     30.82      8.73
+Average:     dev252-0     20.17      0.00    161.33      8.00      0.09      4.33      4.33      8.73
+Average:     dev252-1      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+```
+
+Trong đó, các giá trị:
+
+- `DEV`: tên block device. Hiển thị theo số major và minor của thiết bị.
+
+- `tps` : Transfers per second
+
+- `rd_sec/s` : Sector reads per second (sector is 512 byte)
+
+- `wr_sec/s` : Sector writes per second 
+
+- `avgrq-sz` :  average size (in sectors) of the requests that were issued to the device
+
+- `avgqu-sz` : average queue length of the requests that were issued to the device
+
+- `await` :The average time (in milliseconds) for I/O requests
+
+- `svctm` : The average service time (in milliseconds) for I/O requests
+
+- `%util` : Percentage  of  CPU  time  during  which  I/O requests were issued to the device
+
+
+Kết hợp với tùy chọn `-p` để hiển thị các device dưới dạng tên dành cho người dùng:
+
+![img](../images/sar_cmd_1.png)
 
 ## Tham khảo
 
