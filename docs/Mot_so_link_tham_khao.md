@@ -34,3 +34,9 @@
 - Link tham khảo: https://viblo.asia/p/mot-vai-luu-y-khi-su-dung-shell-script-phan-1-6BAMYV2AGnjz
 
 - Cần nhớ: lấy đầu ra ở 2 (stderr) ghi vào vị trí có cùng địa chỉ của 1 (stdout). Nói chung là ghi lại lỗi sai vào đúng file lưu đầu ra. 
+
+### 4) Promiscuous Mode 
+
+- Link tham khảo: http://www.hvaonline.net/hvaonline/posts/list/2548.hva
+
+- Là chế độ hoạt động của NIC cho phép chập nhận mọi packet không phải của nó, và nó vẫn xử lý rồi gửi tiếp lên trên. 
