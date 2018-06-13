@@ -7,6 +7,7 @@ echo "### Install Snort ###"
 sleep 3
 apt-get update -y
 ethtool -K $IF_NAME gro off
+echo "post-up ethtool -K $IF_NAME gro off" >> /etc/network/interfaces
 apt-get install -y build-essential
 apt-get install libpcap-dev libpcre3-dev libdumbnet-dev bison flex -y 
 apt-get install bison flex -y
