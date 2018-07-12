@@ -59,6 +59,30 @@
         address 10.10.20.11/24
         ```
 
+<a name ='2'></a>
+## 2. Thay giá trị biến môi trường vào file dùng `sed`
 
+- Sử dụng lệnh `sed` để đưa giá trị của biến vào trong file, dùng trong trường hợp cấu hình các file một cách tự động.
+
+- ví dụ: thay địa chỉ localhost bằng một địa chỉ IP bất kì: 
+
+	```
+	root@docker:~# cat 1
+	hello!
+	ban dau la dia chi "localhost" :v
+	root@docker:~#
+	root@docker:~# IP=10.1.0.1
+	root@docker:~#
+	root@docker:~# sed -i 's/localhost/'"$IP"'/g' 1
+	root@docker:~#
+	root@docker:~#
+	root@docker:~# cat 1
+	hello!
+	ban dau la dia chi "10.1.0.1" :v
+	root@docker:~#
+	```
+
+	
+	
 
 
