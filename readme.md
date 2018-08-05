@@ -2,6 +2,8 @@
 
 ## Hello! I'm TTP ^^ (modified by TamNTT4)
 
+hihi
+
 Cấu trúc thư mục
 
 [`docs`](./docs/): thư mục lưu trữ các ghi chép tìm hiểu.
