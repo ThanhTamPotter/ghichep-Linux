@@ -40,3 +40,4 @@
 - Link tham khảo: http://www.hvaonline.net/hvaonline/posts/list/2548.hva
 
 - Là chế độ hoạt động của NIC cho phép chập nhận mọi packet không phải của nó, và nó vẫn xử lý rồi gửi tiếp lên trên. 
+
