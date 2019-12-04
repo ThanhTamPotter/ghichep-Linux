@@ -14,6 +14,12 @@
 
 [7. Tìm hiểu char device và block device](./7.Char_devices_and_Block_devices7.Char_devices_and_Block_devices.md)
 
+[8. Các kiểu tấn công vào hệ thống](./8.Cac_kieu_tan_cong_vao_he_thong.md)
+
+[9. Một số ghi chép về log](./9.Mot_so_ghi_chep_ve_log.md)
+
+[10. Cockpit - 5' deploy và quản trị nhẹ tênh](./10.5min_with_Cockpit.md)
+
 ---
 
 [Một số tìm hiểu nhanh từ các tài liệu tham khảo hay:](./Mot_so_link_tham_khao.md) 
@@ -23,3 +29,11 @@
 2) `/dev/null` thùng rác vô tận trong Linux
 
 3) ` 2>&1` là gì?
+
+
+
+---
+
+Một số link hay ho
+
+1) Linux bash error return codes:  https://www.thegeekstuff.com/2010/10/linux-error-codes/ 
