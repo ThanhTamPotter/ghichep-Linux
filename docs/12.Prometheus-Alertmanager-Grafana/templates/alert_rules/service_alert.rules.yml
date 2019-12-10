@@ -1,0 +1,30 @@
+groups:
+- name: Check_Service_Are_Running
+  rules:
+  - alert: "[TOPKID_ALERT]-Mysqld_is_not_running"
+    expr: mysql_up != 1
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      description: '{{$labels.job}} on {{$labels.instance}} get no data from mysqld service. '
+      summary: "CRITICAL: mysqld on node {{$labels.instance}} is not running"
+
+  - alert: "[TOPKID_ALERT]-Redis_is_not_running"
+    expr: redis_up != 1
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      description: '{{$labels.job}} on {{$labels.instance}} get no data from Redis-server. '
+      summary: "CRITICAL: Redis-server on node {{$labels.instance}} is not running"
+
+  - alert: "[TOPKID_ALERT]-RabbitMQ_is_not_running"
+    expr: rabbitmq_up != 1
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      description: '{{$labels.job}} on {{$labels.instance}} get no data from rabbitmq-server. '
+      summary: "CRITICAL: rabbitmq-server on node {{$labels.instance}} is not running"
+

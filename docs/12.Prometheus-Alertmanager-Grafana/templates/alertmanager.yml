@@ -1,0 +1,89 @@
+global:
+  smtp_smarthost: 'emailxyz.topica.edu.vn:25'
+  smtp_from: 'noti_alert@topica.edu.vn'
+  smtp_auth_username: 'noti_alert'
+  smtp_auth_password: '<password_here>'
+  smtp_require_tls: false
+
+#  smtp_smarthost: 'smtp.gmail.com:587'
+#  smtp_from: 'abc.noti@gmail.com'
+#  smtp_auth_username: 'abc.noti@gmail.com'
+#  smtp_auth_password: '<password_here>'
+  #smtp_require_tls: false
+
+  slack_api_url: 'https://hooks.slack.com/services/<ID_webhook_slack_here>'
+
+
+route:
+  group_by: [alertname, datacenter, app]
+  repeat_interval: 30m
+  receiver: 'team-yellow'
+  routes:
+  - match_re:
+      severity: YELLOW
+    continue: true
+    receiver: 'team-yellow'
+
+  - match_re:
+      severity: ORANGE
+    continue: true
+    receiver: 'team-orange'
+
+  - match_re:
+      severity: RED
+    continue: true
+    receiver: 'team-sms'
+
+receivers:
+
+  - name: 'team-yellow'
+    email_configs:
+    - to: 'tamntt4@topica.edu.vn,xyz@gmail.com'
+      send_resolved: true
+
+###################################
+
+  - name: 'team-orange'
+    email_configs:
+    - to: 'tamntt4@topica.edu.vn,xyz@gmail.com'
+      send_resolved: true
+
+    slack_configs:
+    - send_resolved: true
+      channel: '#orange-level'
+    #  text: "<!channel> \nsummary: {{ .CommonAnnotations.summary }}\ndescription: {{ .CommonAnnotations.description }}"
+      text: >-
+        {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+          *Description:* {{ .Annotations.description }}
+          *Details:*
+          {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+          {{ end }}
+        {{ end }}
+
+
+###################################
+
+  - name: 'team-sms'
+    email_configs:
+    - to: 'tamntt4@topica.edu.vn,xyz@gmail.com'
+      send_resolved: true
+
+    slack_configs:
+    - send_resolved: true
+      channel: '#sms-level'
+#      text: "<!channel> \nsummary: {{ .CommonAnnotations.summary }}\ndescription: {{ .CommonAnnotations.description }}"
+      text: >-
+        {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+          *Description:* {{ .Annotations.description }}
+          *Details:*
+          {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+          {{ end }}
+        {{ end }}
+
+
+    webhook_configs:
+    - send_resolved: true
+      url: https://<domain_sms_server>/alert/sms
+

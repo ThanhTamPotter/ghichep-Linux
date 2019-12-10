@@ -20,6 +20,10 @@
 
 [10. Cockpit - 5' deploy và quản trị nhẹ tênh](./10.5min_with_Cockpit.md)
 
+[11. Deploy devpi-server - python pip mirror for setup](./11.Deploy_devpi-server_proxy_install_for_ python_pip.md)
+
+[12. Một số ghi chép trong quá trình triển khai bộ giám sát prometheus-alertmanager-grafana](./12.Prometheus-Alertmanager-Grafana)
+
 ---
 
 [Một số tìm hiểu nhanh từ các tài liệu tham khảo hay:](./Mot_so_link_tham_khao.md) 

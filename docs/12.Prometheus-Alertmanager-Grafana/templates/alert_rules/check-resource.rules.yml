@@ -1,0 +1,78 @@
+groups:
+- name: Check Resources
+  rules:
+  - alert: "[TOPKID_ALERT]-Disk_Space_Free_below_30_percents"
+    expr: (node_filesystem_avail_bytes/node_filesystem_size_bytes)*100 < 30
+    for: 5m
+    labels:
+      severity: YELLOW
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'Free space of {{ $labels.instance }} is lower 30% : {{ $value}}'
+      summary: 'WARNING: Free space of {{ $labels.instance }} is lower 30%'
+
+  - alert: "[TOPKID_ALERT]-Disk_Space_Free_below_20_percents"
+    expr: (node_filesystem_avail_bytes/node_filesystem_size_bytes)*100 < 20
+    for: 1m
+    labels:
+      severity: RED
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'Free space of {{ $labels.instance }} is lower 20% : {{ $value}}'
+      summary: 'CRITICAL: Free space of {{ $labels.instance }} is lower 20%'
+
+  - alert: "[TOPKID_ALERT]-CPU_used_above_70_percents"
+    expr: (1 - sum by (instance)(irate(node_cpu_seconds_total{mode='idle'}[5m])) / sum by (instance)(irate(node_cpu_seconds_total[5m])) )* 100 > 70 
+    for: 5m
+    labels:
+      severity: YELLOW
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'CPU used of {{ $labels.instance }} is: {{ $value}} > 70%! Pls check now!'
+      summary: 'WARNING: CPU used  of {{ $labels.instance }} is above 70%'
+
+
+  - alert: "[TOPKID_ALERT]-CPU_used_above_80_percents"
+    expr: (1 - sum by (instance)(irate(node_cpu_seconds_total{mode='idle'}[5m])) / sum by (instance)(irate(node_cpu_seconds_total[5m])) )* 100 > 80
+    for: 1m
+    labels:
+      severity: RED
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'CPU used of {{ $labels.instance }} is: {{ $value}} > 80% for 5 minutes! Pls check now!'
+      summary: 'CRTICAL: CPU used  of {{ $labels.instance }} is above 80%'
+
+
+  - alert: "[TOPKID_ALERT]-Memory_used_above_70_percents"
+    #expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes))/ node_memory_MemTotal_bytes)*100 > 70
+    expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes + node_memory_SReclaimable_bytes))/ node_memory_MemTotal_bytes)*100 > 70
+    for: 5m
+    labels:
+      severity: YELLOW
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'Memory used of {{ $labels.instance }} is: {{ $value}} > 70% for 5 minutes! Pls check now!'
+      summary: 'WARNING: Memory used  of {{ $labels.instance }} is above 70%'
+
+
+  - alert: "[TOPKID_ALERT]-Memory_used_above_80_percents"
+    #expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes))/ node_memory_MemTotal_bytes)*100 > 80
+    expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes + node_memory_SReclaimable_bytes))/ node_memory_MemTotal_bytes)*100 > 80
+    for: 1m
+    labels:
+      severity: ORANGE 
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'Memory used of {{ $labels.instance }} is: {{ $value}} > 80% for 5 minutes! Pls check now!'
+      summary: 'CRITICAL: Memory used  of {{ $labels.instance }} is above 80%'
+
+  - alert: "[TOPKID_ALERT]-Memory_used_above_85_percents"
+    #expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes))/ node_memory_MemTotal_bytes)*100 > 80
+    expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes + node_memory_SReclaimable_bytes))/ node_memory_MemTotal_bytes)*100 > 85
+    for: 1m
+    labels:
+      severity: RED
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'Memory used of {{ $labels.instance }} is: {{ $value}} > 85% for 5 minutes! Pls check now!'
+      summary: 'CRITICAL: Memory used  of {{ $labels.instance }} is above 85%'

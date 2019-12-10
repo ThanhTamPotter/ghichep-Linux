@@ -1,0 +1,48 @@
+groups:
+- name: Database_Alerts
+  rules:
+  - alert: "[TOPKID_ALERT]-Mariadb_Max_Connection_Allow"
+    expr: mysql_global_status_threads_connected > mysql_global_variables_max_connections * 0.8
+    for: 1m
+    labels:
+      severity: ORANGE
+    annotations:
+      description: 'Current connections from {{$labels.job}} on {{$labels.instance}} are {{ $value}} > 80% max connection allow!'
+      summary: 'CRITICAL: Current connections exceed over 80% max connection allow'
+
+  - alert: "[TOPKID_ALERT]-MariaDB_Galera_Not_Ready"
+    expr: mysql_global_status_wsrep_ready {instance!='dbbak:9104'} != 1
+    for: 5m
+    labels:
+      severity: YELLOW
+    annotations:
+      description: '{{$labels.job}} on {{$labels.instance}} is not ready - It return status wsrep_ready = {{ $value}}! '
+      summary: 'WARNING: Galera cluster node not ready on 3 nodes'
+
+  - alert: "[TOPKID_ALERT]-MariaDB_Galera_Out_Of_Sync"
+    expr: (mysql_global_status_wsrep_local_state != 4 and mysql_global_variables_wsrep_desync == 0)
+    for: 5m
+    labels:
+      severity: YELLOW
+    annotations:
+      description: Warning node:{{$labels.instance}} is not in synced, wsrep local state is {{$value}} - not SYNCED (state 4) 
+      summary: 'WARNING: Galera cluster node out of sync'
+
+  - alert: "[TOPKID_ALERT]-MariaDB_Replication_Not_Running"
+    expr: (mysql_slave_status_slave_io_running == 0 or mysql_slave_status_slave_sql_running == 0)
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      description: Slave replication on {{$labels.instance}}/([^:]+):.*/} (IO or SQL) has been down for more than 2 minutes.
+      summary: 'CRITICAL: Slave replication is not running'
+
+  - alert: "[TOPKID_ALERT]-MariaDB_InnoDB_Log_Waits"
+    expr: rate(mysql_global_status_innodb_log_waits[15m]) > 10
+    for: 5m
+    labels:
+      severity: YELLOW
+    annotations:
+      description: The innodb logs are waiting for disk at a rate of {{$value}} /
+        second on node {{$labels.instance}}
+      summary: 'WARNING: MariaDB innodb log writes stalling'

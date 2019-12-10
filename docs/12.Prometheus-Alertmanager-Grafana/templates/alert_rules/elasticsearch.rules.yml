@@ -1,0 +1,38 @@
+groups:
+- name: Check_Elasticsearch
+  rules:
+  - alert: "[TOPKID_ALERT]-Elasticsearch_is_not_running"
+    expr: elasticsearch_cluster_health_up != 1
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      description: '{{$labels.job}} on {{$labels.instance}} get no data from Elasticsearch Cluster. '
+      summary: "CRITICAL: Elasticsearch on node {{$labels.instance}} is not running"
+
+  - alert: "[TOPKID_ALERT]-Elasticsearch_Java_Memory_Used_Over_90%"
+    expr: elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes * 100 > 90
+    for: 1m
+    labels:
+      severity: YELLOW
+    annotations:
+      description: 'Memory used of Java on  {{$labels.host}} cluster {{$labels.cluster}} of {{$labels.instance}} get {{ $value}}% > 80% for 1 minute'
+      summary: "WARING: Memory used of Java on {{$labels.instance}} get {{ $value}}% > 90% for 1 minute"
+
+  - alert: "[TOPKID_ALERT]-Elasticsearch_Java_Memory_Used_Over_95%"
+    expr: elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes * 100 > 95
+    for: 1m
+    labels:
+      severity: ORANGE
+    annotations:
+      description: 'Memory used of Java on  {{$labels.host}} cluster {{$labels.cluster}} of {{$labels.instance}} get {{ $value}}% > 95% for 1 minute'
+      summary: "WARING: Memory used of Java on {{$labels.instance}} get {{ $value}}% > 95% for 1 minute"
+
+  - alert: "[TOPKID_ALERT]-Elasticsearch_Java_Memory_Used_Over_98%"
+    expr: elasticsearch_jvm_memory_used_bytes / elasticsearch_jvm_memory_max_bytes * 100 > 98
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      description: 'Memory used of Java on  {{$labels.host}} cluster {{$labels.cluster}} of {{$labels.instance}} get {{ $value}}% > 98% for 1 minute'
+      summary: "WARING: Memory used of Java on {{$labels.instance}} get {{ $value}}% > 98% for 1 minute"

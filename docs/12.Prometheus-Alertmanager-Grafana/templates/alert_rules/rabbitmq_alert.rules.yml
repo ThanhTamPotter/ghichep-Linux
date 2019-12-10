@@ -1,0 +1,29 @@
+groups:
+- name: Check_RabbitMQ_Queues
+  rules:
+  - alert: "[TOPKID_ALERT]-RabbitMQ_Queues_100message_for_1m"
+    expr: rabbitmq_queue_messages > 100
+    for: 1m
+    labels:
+      severity: YELLOW
+    annotations:
+      description: 'Messages on queue  {{$labels.queue}} of {{$labels.instance}} get {{ $value}} messages > 100 messages for 1 minute'
+      summary: "WARING: Rabbit queue  {{$labels.queue}} of {{$labels.instance}} get {{ $value}} messages > 100 messages for 1 minute"
+
+  - alert: "[TOPKID_ALERT]-RabbitMQ_Queues_100message_for_5m"
+    expr: rabbitmq_queue_messages > 100
+    for: 5m
+    labels:
+      severity: ORANGE
+    annotations:
+      description: 'Messages on queue  {{$labels.queue}} of {{$labels.instance}} get {{ $value}} messages > 100 messages for 5 minutes'
+      summary: "CRITICAL: Rabbit queue {{$labels.queue}} of {{$labels.instance}} get {{ $value}} messages > 100 messages for 5 minutes"
+
+  - alert: "[TOPKID_ALERT]-RabbitMQ_Queues_100message_in_10m"
+    expr: rabbitmq_queue_messages > 100
+    for: 10m
+    labels:
+      severity: RED
+    annotations:
+      description: 'Messages on queue  {{$labels.queue}} of {{$labels.instance}} get {{ $value}} messages > 100 messages for 10 minutes'
+      summary: "CRITICAL: Rabbit queue {{$labels.queue}} of {{$labels.instance}} get {{ $value}} messages > 100 messages for 10 minutes"

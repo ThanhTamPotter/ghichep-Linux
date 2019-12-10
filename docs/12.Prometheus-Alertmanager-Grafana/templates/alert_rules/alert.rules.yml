@@ -1,0 +1,31 @@
+groups:
+- name: Instances
+  rules:
+  - alert: "[TOPKID_ALERT]-Instance_Down"
+    expr: up == 0
+    for: 2m
+    labels:
+      severity: RED
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: '{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 2 minutes.'
+      summary: 'CRITICAL: Instance {{ $labels.instance }} DOWN'
+
+  - alert: "[TOPKID_ALERT]-Check_URL"
+    expr: probe_http_status_code{job != "blackbox_checklink_log"} > 400 
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      summary: "Get {{$labels.target}} return {{ $value}} code"
+      description: "CRITICAL: URL {{$labels.target}} return status code: {{ $value}}} for 1m! Check nowwww!"
+
+  - alert: "[TOPKID_ALERT]-Check_URL_LOG"
+    expr: probe_http_status_code{job =~ "blackbox_checklink_log"} > 499
+    for: 1m
+    labels:
+      severity: RED
+    annotations:
+      summary: "Get {{$labels.target}} return {{ $value}} code"
+      description: "CRITICAL: URL {{$labels.target}} return status code: {{ $value}} for 1m! Check nowwww!"
+

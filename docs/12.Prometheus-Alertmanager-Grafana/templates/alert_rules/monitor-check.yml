@@ -1,0 +1,27 @@
+groups:
+- name: Check Resources server Monitor - Log 
+  rules:
+
+  - alert: "[TOPKID_ALERT]-Memory_used_of_Monitor_above_70_percents"
+    #expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes))/ node_memory_MemTotal_bytes)*100 > 70
+    expr: ((node_memory_MemTotal_bytes{instance="fe01:9100"}- (node_memory_MemFree_bytes{instance="fe01:9100"} + node_memory_Cached_bytes{instance="fe01:9100"} + node_memory_Buffers_bytes{instance="fe01:9100"}))/ node_memory_MemTotal_bytes{instance="fe01:9100"})*100 > 80
+    for: 5m
+    labels:
+      severity: YELLOW
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'Memory used of {{ $labels.instance }} is: {{ $value}} > 80% for 5 minutes! Pls check now!'
+      summary: 'WARNING: Memory used  of {{ $labels.instance }} is above 80%'
+
+
+  - alert: "[TOPKID_ALERT]-Memory_used_of_Monitor_above_90_percents"
+    #expr: ((node_memory_MemTotal_bytes- (node_memory_MemFree_bytes + node_memory_Cached_bytes + node_memory_Buffers_bytes))/ node_memory_MemTotal_bytes)*100 > 80
+    expr: ((node_memory_MemTotal_bytes{instance="fe01:9100"}- (node_memory_MemFree_bytes{instance="fe01:9100"} + node_memory_Cached_bytes{instance="fe01:9100"} + node_memory_Buffers_bytes{instance="fe01:9100"}))/ node_memory_MemTotal_bytes{instance="fe01:9100"})*100 > 90
+    for: 1m
+    labels:
+      severity: RED
+    # Prometheus templates apply here in the annotation and label fields of the alert.
+    annotations:
+      description: 'Memory used of {{ $labels.instance }} is: {{ $value}} > 90% for 1 minutes! Pls check now!'
+      summary: 'CRITICAL: Memory used  of {{ $labels.instance }} is above 90%'
+
