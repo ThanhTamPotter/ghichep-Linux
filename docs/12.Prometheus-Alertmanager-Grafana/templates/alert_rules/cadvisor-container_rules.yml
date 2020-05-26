@@ -2,7 +2,7 @@ groups:
 - name: Monitor Backend
   rules:
   - alert: ⚠️VTIDC_CRITICAL_CONTAINER_NOT_RUNNING
-    expr: time() - container_last_seen{name=~".+"} > 60
+    expr: time() - container_last_seen{name=~".+"} > 60 # [scrape_interval]
     for: 1m
     annotations:
       value: '{{ $value | printf "%.3f" }}'
