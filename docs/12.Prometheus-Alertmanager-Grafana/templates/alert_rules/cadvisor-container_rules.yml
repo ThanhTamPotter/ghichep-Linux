@@ -1,0 +1,51 @@
+groups:
+- name: Monitor Backend
+  rules:
+  - alert: ⚠️VTIDC_CRITICAL_CONTAINER_NOT_RUNNING
+    expr: time() - container_last_seen{name=~".+"} > 60
+    for: 1m
+    annotations:
+      value: '{{ $value | printf "%.3f" }}'
+      timestamp: '{{ with query "time()" }}{{ . | first | value | humanizeTimestamp }}{{ end }}'
+      summary1: "Container"
+      summary2: ' {{ $labels.name }}'
+      summary3: ' on host {{ $labels.instance}} is not running'
+    labels:
+      service: container
+      container_name: '{{ $labels.name }}'
+      severity: CRITICAL
+      typeMetric: nodata
+
+  - alert: VTIDC_WARNING_MEMORY_USAGE_OF_CONTAINER_IS_ABOVE_80_percents
+    expr: container_memory_usage_bytes{name!~".*cadvisor.*", image=~".+"} / on(instance) group_left() container_spec_memory_limit_bytes{id="/"} * 100 >80
+    for: 2m
+    annotations:
+      value: '{{ $value | printf "%.3f" }}'
+      timestamp: '{{ with query "time()" }}{{ . | first | value | humanizeTimestamp }}{{ end }}'
+      summary1: "Memory usage of container"
+      summary2: ' {{ $labels.name }}'
+      summary3: ' on host {{ $labels.instance}} is {{ $value | printf "%.2f"}} > 80%'
+    labels:
+      service: container
+      container_name: '{{ $labels.name }}'
+      severity: WARNING
+      threshold: '80'
+      typeMetric: RAM
+
+  - alert: VTIDC_WARNING_CPU_USAGE_OF_CONTAINER_IS_ABOVE_70_percents
+    expr: avg (rate(container_cpu_usage_seconds_total{name=~".+"}[10m])) by (name) * 100 > 70
+    for: 10m
+    annotations:
+      value: '{{ $value | printf "%.2f" }}'
+      timestamp: '{{ with query "time()" }}{{ . | first | value | humanizeTimestamp }}{{ end }}'
+      summary1: "CPU usage of container"
+      summary2: ' {{ $labels.name }}'
+      summary3: ' on host {{ $labels.instance}} is {{ $value | printf "%.2f" }} > 70%'
+    labels:
+      service: container
+      container_name: '{{ $labels.name }}'
+      severity: WARNING
+      threshold: '70'
+      typeMetric: CPU
+
+
