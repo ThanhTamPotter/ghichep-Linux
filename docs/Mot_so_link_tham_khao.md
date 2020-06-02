@@ -41,3 +41,25 @@
 
 - Là chế độ hoạt động của NIC cho phép chập nhận mọi packet không phải của nó, và nó vẫn xử lý rồi gửi tiếp lên trên. 
 
+### 5) Tạo event xóa dữ liệu cũ quá bao nhiêu ngày trong MySQL
+
+- Link tham khảo: https://dba.stackexchange.com/questions/148308/how-to-remove-6-months-old-data-automatically-from-mysql-innodb-table
+
+- Ví dụ: Tạo event xóa tất cả các dữ liệu cũ đã được tạo quá 30 ngày trước, định danh thời gian bởi trường dữ liệu `created_at` trong bảng `historyData`:
+
+  ```mysql
+  mysql> use database_name;
+  Database changed
+  mysql> CREATE EVENT Clean30daysAgo  ON SCHEDULE EVERY 1 DAY ENABLE 
+    ->   DO 
+    ->   DELETE FROM database_name.historyData WHERE `created_at` < UNIX_TIMESTAMP( NOW() - INTERVAL 30 DAY);
+  Query OK, 0 rows affected (0.03 sec)
+  mysql> 
+  mysql> 
+  mysql> 
+  mysql> show events\G
+  mysql> 
+  mysql> show create event Clean30daysAgo\G
+  ```
+
+  
