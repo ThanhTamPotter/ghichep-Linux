@@ -1,7 +1,7 @@
 groups:
 - name: Monitor Backend
   rules:
-  - alert: ⚠️VTIDC_CRITICAL_CONTAINER_NOT_RUNNING
+  - alert: ⚠️VTIDC_CRITICAL_CONTAINER_NOT_RUNNING # haiz. this rule cannot check if container not running, because if container stop, cadvisor cant scrape metric from it and the metrics of that container will be not exists -> check rule not match -> alertmanager will believe this alert is resloved :| Using exactly regex per container name per rule alert 
     expr: time() - container_last_seen{name=~".+"} > 60 # [scrape_interval]
     for: 1m
     annotations:
