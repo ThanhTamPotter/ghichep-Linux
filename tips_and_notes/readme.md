@@ -9,3 +9,5 @@
 [4) Backup và restore MySQL 8 sử dụng **xtrabackup** container](./4.Backup_and_Restore_on_MySQL8.md)
 
 [5) hmm awesome courses](http://dl.liansec.net/srv1)
+
+[6) Reset password administrator windows using ubuntu]( https://www.top-password.com/blog/how-to-reset-windows-password-with-ubuntu-for-free/ )
