@@ -1,0 +1,190 @@
+## source from: https://github.com/jsuchenia/ceph-prometheus-rules/blob/master/ceph.yml and https://github.com/ceph/ceph/blob/2bf5503aa3/monitoring/prometheus/alerts/ceph_default_alerts.yml
+
+groups:
+- name: ceph.rules
+  rules:
+  - alert: CephTargetDown
+    expr: up{job="ceph-monitor"} == 0
+    for: 10m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Monitor CEPH target on {{ $labels.instance }} down for more than 10m, please check - it could be a either exporter crash or a whole cluster crash
+      summary: CEPH exporter down
+      
+  - alert: CephErrorState
+    expr: ceph_health_status > 1
+    for: 5m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Ceph on is in Error state longer than 5m, please check status of pools and OSDs. Check `ceph health detail` for more information
+      summary: CEPH in ERROR
+      
+#  - alert: CephWarnState
+#    expr: ceph_health_status == 1
+#    for: 30m
+#    labels:
+#      severity: warning
+#      service: ceph
+#    annotations:
+#      description: Ceph is in Warn state longer than 30m, please check status of pools and OSDs
+#      summary: CEPH in WARN
+      
+  - alert: CephOsdDown
+    expr: ceph_osd_up == 0
+    for: 30m
+    labels:
+      severity: warning
+      service: ceph
+    annotations:
+      description: OSD {{ $labels.ceph_daemon }} on instance {{ $labels.instance}} is down longer than 30 min, please check whats the status
+      summary: OSD down
+      
+  - alert: CephOsdApplyLatencyTooHigh
+    expr: ceph_osd_apply_latency_ms > 10000
+    for: 2m
+    labels:
+      severity: warning
+      service: ceph
+    annotations:
+      description: OSD latency for {{ $labels.ceph_daemon }} on instance {{ $labels.instance}} is too high. Please check if it doesn't stuck in weird state
+      summary: OSD latency too high {{ $labels.ceph_daemon }}
+      
+  # - alert: MonitorClockSkewTooHigh
+    # expr: abs(ceph_monitor_clock_skew_seconds) > 0.1
+    # for: 60s
+    # labels:
+      # severity: warning
+      # service: ceph
+    # annotations:
+      # description: Monitor clock skew detected on  {{ $labels.monitor }} - please check ntp and harware clock settins
+      # summary: Clock skew detected on {{ $labels.monitor }}
+      
+  - alert: CephUsedStorage
+    expr: ceph_cluster_total_used_bytes/ceph_cluster_total_bytes * 100 > 70
+    for: 60s
+    labels:
+      severity: warning
+      service: ceph
+    annotations:
+      description: Used storage more than 70% - please check why its too high
+      summary: Used storage more than 70%
+      
+  - alert: CephAvailableStorage
+    expr: (1-ceph_cluster_total_used_bytes/ceph_cluster_total_bytes)*100 < 15
+    for: 2m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Available storage less than 15% - please check why its too high
+      summary: Available storage less than 15%
+      
+  - alert: CephOSDUtilizatoin
+    expr: ceph_cluster_total_used_bytes/ceph_cluster_total_bytes*100 > 90
+    for: 2m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Osd free space for  {{ $labels.ceph_daemon }} on instance {{ $labels.instance}} is higher than 90%. Please validate why its so big, reweight or add storage
+      summary: OSD {{ $labels.ceph_daemon }} instance {{ $labels.instance}} is going out of space
+      
+  - alert: CephPgDown
+    expr: ceph_pg_down > 0
+    for: 3m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Some groups are down (unavailable) for too long . Please ensure that all the data are available!
+      summary: PG DOWN
+      
+  - alert: CephPgIncomplete
+    expr: ceph_pg_incomplete > 0
+    for: 2m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Some groups are incomplete (unavailable) for too long. Please ensure that all the data are available!
+      summary: PG INCOMPLETE value {{ value}}
+      
+  - alert: CephPgInconsistent
+    expr: ceph_pg_inconsistent > 0
+    for: 1m
+    labels:
+      severity: warning
+      service: ceph
+    annotations:
+      description: Some groups are inconsistent for too long. Data is available but inconsistent across nodes.
+      summary: PG INCONSISTENT value {{ $value }}]
+      
+  - alert: CephPgActivating
+    expr: ceph_pg_activating > 0
+    for: 5m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Some groups are activating for too long. Those PGs are unavailable for too long!
+      summary: PG ACTIVATING value {{ $value }}
+      
+  - alert: CephPgBackfillTooFull
+    expr: ceph_pg_backfill_toofull > 0
+    for: 5m
+    labels:
+      severity: warning
+      service: ceph
+    annotations:
+      description: Some groups are located on full OSD. Those PGs can be unavailable shortly. Please check OSDs, change weight or reconfigure CRUSH rules.
+      summary: PG TOO FULL {{ $value }}
+      
+  - alert: CephPgUnavailable
+    expr: ceph_pg_total - ceph_pg_active > 0
+    for: 5m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: Some groups are unavailable. Please check their detailed status and current configuration.
+      summary: "{{ $value }} PG UNAVAILABLE "
+      
+  - alert: CephOsdReweighted
+    expr: ceph_osd_weight < 1
+    for: 1h
+    labels:
+      severity: warning
+      service: ceph
+    annotations:
+      description: OSD {{ $labels.ceph_daemon }} on instance {{ $labels.instance }} was reweighted for too long (1 hour). Please either create silent or fix that issue
+      summary: OSD {{ $labels.ceph_daemon }} on instance {{ $labels.instance}} reweighted - value {{ $value }}  
+
+  - alert: CephRootVolumeFull
+    expr: node_filesystem_avail_bytes{mountpoint="/",instance=~"bd-ceph.*"} / node_filesystem_size_bytes{mountpoint="/",instance=~"bd-ceph.*"} * 100 < 10 
+    for: 5m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      description: "Root volume (OSD and MON store) is dangerously full {{ $value | humanize }}% free."
+ 
+  - alert: CephQuorumProblem
+    expr: sum(ceph_mon_quorum_status) < 3
+    for: 5m
+    labels:
+      severity: critical
+      service: ceph
+    annotations:
+      summary: Number ceph node qourum < 3
+      description: |
+        Monitor count in quorum is below three in 5m.
+        Only {{ $value }} of {{ with query "count(ceph_mon_quorum_status)" }}{{ . | first | value }}{{ end }} monitors are active.
+        The following monitors are down:
+        {{- range query "(ceph_mon_quorum_status == 0) + on(ceph_daemon) group_left(hostname) (ceph_mon_metadata * 0)" }}
+          - {{ .Labels.ceph_daemon }} on {{ .Labels.hostname }}
+        {{- end }}
+
