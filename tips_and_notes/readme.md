@@ -11,3 +11,5 @@
 [5) hmm awesome courses](http://dl.liansec.net/srv1)
 
 [6) Reset password administrator windows using ubuntu]( https://www.top-password.com/blog/how-to-reset-windows-password-with-ubuntu-for-free/ )
+
+[7. Using ProxySQL for block some query that can't be executed by client]( https://proxysql.com/documentation/proxysql-read-write-split-howto/ )
