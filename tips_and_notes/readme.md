@@ -21,3 +21,5 @@
   ```
   
   (sort để có thể đếm uniq, rồi sort lại kết quả theo thứ tự tăng hoặc giảm dần)
+
+[9. Disable Docker's IPtables rules on Systemd](https://linuxconfig.org/how-to-disable-docker-s-iptables-on-systemd-linux-systems)
