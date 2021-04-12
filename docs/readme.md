@@ -41,3 +41,6 @@
 Một số link hay ho
 
 1) Linux bash error return codes:  https://www.thegeekstuff.com/2010/10/linux-error-codes/ 
+2) How docker container DNS works: https://kerneltalks.com/networking/how-docker-container-dns-works/
+3) 
+4) 
