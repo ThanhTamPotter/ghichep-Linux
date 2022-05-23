@@ -42,5 +42,5 @@ Một số link hay ho
 
 1) Linux bash error return codes:  https://www.thegeekstuff.com/2010/10/linux-error-codes/ 
 2) How docker container DNS works: https://kerneltalks.com/networking/how-docker-container-dns-works/
-3) 
+3) Security group default in OpenStack: https://help.switch.ch/engines/faq/what-are-the-rules-in-the-default-security-group-for-can-i-delete-them/
 4) 
