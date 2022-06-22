@@ -43,6 +43,7 @@ Một số link hay ho
 1) Linux bash error return codes:  https://www.thegeekstuff.com/2010/10/linux-error-codes/ 
 2) How docker container DNS works: https://kerneltalks.com/networking/how-docker-container-dns-works/
 3) Security group default in OpenStack: https://help.switch.ch/engines/faq/what-are-the-rules-in-the-default-security-group-for-can-i-delete-them/
+
 **Note**: The second pair are "ingress" rules that allow all incoming traffic from other members of the same security group.  Thus, when you create several instances sharing this Security Group, they will have unlimited connectivity between each other—you won't need any specific rules to allow those internal communications.
 
 4) 
